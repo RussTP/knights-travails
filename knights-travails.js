@@ -12,15 +12,26 @@ return moves.filter(([newX, newY]) => {
     }); 
 }
 
-function knightMoves( start, end) {
+function knightMoves(start, end) {
 let queue =  [start];
 let visited = new Set();
+let parent = {};
 
 
 while (queue.length > 0) {
  let current = queue.shift();
  if (current[0] === end[0] && current[1] === end[1]) {
-    return `Knight travails from [${start}] to [${end}]`;
+    let path = [];
+    let step = current;
+
+    while (step !== undefined) {
+        path.push(step);
+        step = parent[step.toString()];
+    }
+        path.reverse();
+
+        let pathString = path.map(pos => `[${pos}]`).join ("\n");
+        return `Your Knight made it in ${path.length - 1} moves. The Knight's required path:\n${pathString}`;
         }
 
         visited.add(current.toString());
@@ -30,9 +41,13 @@ while (queue.length > 0) {
             let move = moves[i];
             if (!visited.has(move.toString())) {
             queue.push(move);
+            parent[move.toString()] = current;
             }
         }
     }   
 }
 
-console.log(knightMoves([0,0], [1,2]));
+console.log(knightMoves([0,0], [3,3]));
+console.log(knightMoves([3,3], [0,0]));
+console.log(knightMoves([0,0], [7,7]));
+console.log(knightMoves([7,7], [0,0]));
